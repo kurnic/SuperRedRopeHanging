@@ -32,6 +32,9 @@
 static int framesCounter = 0;
 static int finishScreen = 0;
 
+bool bgChange = true;
+Color bgColor = WHITE;
+
 //----------------------------------------------------------------------------------
 // Title Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -39,7 +42,6 @@ static int finishScreen = 0;
 // Title Screen Initialization logic
 void InitTitleScreen(void)
 {
-    // TODO: Initialize TITLE screen variables here!
     framesCounter = 0;
     finishScreen = 0;
 }
@@ -47,30 +49,63 @@ void InitTitleScreen(void)
 // Title Screen Update logic
 void UpdateTitleScreen(void)
 {
-    // TODO: Update TITLE screen variables here!
-
     // Press enter or tap to change to GAMEPLAY screen
     if (IsKeyPressed(KEY_ENTER) || IsGestureDetected(GESTURE_TAP))
     {
+        PlaySound(fxMenu);
         //finishScreen = 1;   // OPTIONS
         finishScreen = 2;   // GAMEPLAY
-        PlaySound(fxCoin);
+    }
+    
+    //BG animation
+    if(bgChange) {
+        if(bgColor.r > 150) {
+            bgColor.r = bgColor.r - 2;
+            bgColor.g = bgColor.g - 2;
+            bgColor.b = bgColor.b - 2;
+        }
+        else bgChange = !bgChange;
+    }
+    else {
+        if(bgColor.r < 255) {
+            bgColor.r = bgColor.r + 2;
+            bgColor.g = bgColor.g + 2;
+            bgColor.b = bgColor.b + 2;
+        }
+        else bgChange = !bgChange;
     }
 }
 
 // Title Screen Draw logic
 void DrawTitleScreen(void)
 {
-    // TODO: Draw TITLE screen here!
-    DrawRectangle(0, 0, GetScreenWidth(), GetScreenHeight(), GREEN);
-    DrawTextEx(font, "TITLE SCREEN", (Vector2){ 20, 10 }, font.baseSize*3, 4, DARKGREEN);
-    DrawText("PRESS ENTER or TAP to JUMP to GAMEPLAY SCREEN", 120, 220, 20, DARKGREEN);
+    ClearBackground(bgColor);
+    
+    DrawRectangle(0, 0, 540, 2, BLACK);
+    DrawRectangle(0, 898, 540, 2, BLACK);
+    
+    DrawRectangle(0, 0, 2, 900, BLACK);
+    DrawRectangle(538, 0, 2, 900, BLACK);
+    
+    DrawText("SUPER RED ROPE", 38, 366, 50, BLACK);
+    DrawText("SUPER RED ROPE", 42, 370, 50, BLACK);
+    DrawText("SUPER RED ROPE", 38, 370, 50, BLACK);
+    DrawText("SUPER RED ROPE", 42, 366, 50, BLACK);
+    DrawText("SUPER RED ROPE", 40, 368, 50, RED);
+    
+    DrawText("HANGING", 85, 428, 80, BLACK);
+    DrawText("HANGING", 89, 432, 80, BLACK);
+    DrawText("HANGING", 85, 432, 80, BLACK);
+    DrawText("HANGING", 89, 428, 80, BLACK);
+    DrawText("HANGING", 87, 430, 80, RED);
+    
+    DrawText("PRESS ENTER or TAP to START", 95, 550, 20, BLACK);
 }
 
 // Title Screen Unload logic
 void UnloadTitleScreen(void)
 {
-    // TODO: Unload TITLE screen variables here!
+
 }
 
 // Title Screen should finish?

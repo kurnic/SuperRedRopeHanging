@@ -72,6 +72,11 @@ void InitLogoScreen(void)
 // Logo Screen Update logic
 void UpdateLogoScreen(void)
 {
+    //Hard skip
+    if(IsKeyPressed(KEY_R)) {
+        finishScreen = 1;   // Jump to next screen
+    }
+    
     if (state == 0)                 // State 0: Top-left square corner blink logic
     {
         framesCounter++;
@@ -127,6 +132,12 @@ void UpdateLogoScreen(void)
 // Logo Screen Draw logic
 void DrawLogoScreen(void)
 {
+    DrawRectangle(0, 0, 540, 2, BLACK);
+    DrawRectangle(0, 898, 540, 2, BLACK);
+    
+    DrawRectangle(0, 0, 2, 900, BLACK);
+    DrawRectangle(538, 0, 2, 900, BLACK);
+    
     if (state == 0)         // Draw blinking top-left square corner
     {
         if ((framesCounter/10)%2) DrawRectangle(logoPositionX, logoPositionY, 16, 16, BLACK);
@@ -163,7 +174,7 @@ void DrawLogoScreen(void)
 // Logo Screen Unload logic
 void UnloadLogoScreen(void)
 {
-    // Unload LOGO screen variables here!
+
 }
 
 // Logo Screen should finish?

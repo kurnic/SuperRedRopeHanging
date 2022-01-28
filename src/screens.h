@@ -35,9 +35,12 @@ typedef enum GameScreen { LOGO = 0, TITLE, OPTIONS, GAMEPLAY, ENDING } GameScree
 // Global Variables Declaration (shared by several modules)
 //----------------------------------------------------------------------------------
 extern GameScreen currentScreen;
-extern Font font;
-extern Music music;
-extern Sound fxCoin;
+extern Music music1;
+extern Music music2;
+extern Sound fxMenu;
+extern Sound fxGrab;
+extern Sound fxCrash;
+extern int score;
 
 #ifdef __cplusplus
 extern "C" {            // Prevents name mangling of functions
@@ -82,7 +85,7 @@ int FinishGameplayScreen(void);
 //----------------------------------------------------------------------------------
 // Ending Screen Functions Declaration
 //----------------------------------------------------------------------------------
-void InitEndingScreen(void);
+void InitEndingScreen(int score);
 void UpdateEndingScreen(void);
 void DrawEndingScreen(void);
 void UnloadEndingScreen(void);

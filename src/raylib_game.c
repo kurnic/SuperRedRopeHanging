@@ -24,15 +24,18 @@
 // NOTE: Those variables are shared between modules through screens.h
 //----------------------------------------------------------------------------------
 GameScreen currentScreen = 0;
-Font font = { 0 };
-Music music = { 0 };
-Sound fxCoin = { 0 };
+Music music1 = { 0 };
+Music music2 = { 0 };
+Sound fxMenu = { 0 };
+Sound fxGrab = { 0 };
+Sound fxCrash = { 0 };
+int score = 0;
 
 //----------------------------------------------------------------------------------
 // Local Variables Definition (local to this module)
 //----------------------------------------------------------------------------------
-static const int screenWidth = 800;
-static const int screenHeight = 450;
+static const int screenWidth = 540;
+static const int screenHeight = 900;
 
 // Required variables to manage screen transitions (fade-in, fade-out)
 static float transAlpha = 0.0f;
@@ -41,11 +44,10 @@ static bool transFadeOut = false;
 static int transFromScreen = -1;
 static int transToScreen = -1;
 
+
 //----------------------------------------------------------------------------------
 // Local Functions Declaration
 //----------------------------------------------------------------------------------
-static void ChangeToScreen(int screen);     // Change to screen, no transition effect
-
 static void TransitionToScreen(int screen); // Request transition to next screen
 static void UpdateTransition(void);         // Update transition effect
 static void DrawTransition(void);           // Draw transition effect (full-screen rectangle)
@@ -59,17 +61,26 @@ int main(void)
 {
     // Initialization
     //---------------------------------------------------------
-    InitWindow(screenWidth, screenHeight, "raylib game template");
+    InitWindow(screenWidth, screenHeight, "Super Red Rope Hanging");
 
     InitAudioDevice();      // Initialize audio device
 
     // Load global data (assets that must be available in all screens, i.e. font)
-    font = LoadFont("resources/mecha.png");
-    music = LoadMusicStream("resources/ambient.ogg");
-    fxCoin = LoadSound("resources/coin.wav");
+    music1 = LoadMusicStream("resources/Loop1.ogg");
+    music2 = LoadMusicStream("resources/Loop2.ogg");
+    fxMenu = LoadSound("resources/Menu.ogg");
+    fxGrab = LoadSound("resources/Grab.ogg");
+    fxCrash = LoadSound("resources/Crash.ogg");
 
-    SetMusicVolume(music, 1.0f);
-    PlayMusicStream(music);
+    //Setting volumes
+    SetMusicVolume(music1, 0.5f);
+    SetMusicVolume(music2, 0.4f);
+    SetSoundVolume(fxMenu, 1.0f); 
+    SetSoundVolume(fxGrab, 0.25f); 
+    SetSoundVolume(fxCrash, 0.9f); 
+    
+    //Start playing menu music
+    PlayMusicStream(music1);
 
     // Setup and init first screen
     currentScreen = LOGO;
@@ -101,9 +112,11 @@ int main(void)
     }
 
     // Unload global data loaded
-    UnloadFont(font);
-    UnloadMusicStream(music);
-    UnloadSound(fxCoin);
+    UnloadMusicStream(music1);
+    UnloadMusicStream(music2);
+    UnloadSound(fxMenu);
+    UnloadSound(fxGrab);
+    UnloadSound(fxCrash);
 
     CloseAudioDevice();     // Close audio context
 
@@ -116,31 +129,6 @@ int main(void)
 //----------------------------------------------------------------------------------
 // Module specific Functions Definition
 //----------------------------------------------------------------------------------
-// Change to next screen, no transition
-static void ChangeToScreen(int screen)
-{
-    // Unload current screen
-    switch (currentScreen)
-    {
-        case LOGO: UnloadLogoScreen(); break;
-        case TITLE: UnloadTitleScreen(); break;
-        case GAMEPLAY: UnloadGameplayScreen(); break;
-        case ENDING: UnloadEndingScreen(); break;
-        default: break;
-    }
-
-    // Init next screen
-    switch (screen)
-    {
-        case LOGO: InitLogoScreen(); break;
-        case TITLE: InitTitleScreen(); break;
-        case GAMEPLAY: InitGameplayScreen(); break;
-        case ENDING: InitEndingScreen(); break;
-        default: break;
-    }
-
-    currentScreen = screen;
-}
 
 // Request transition to next screen
 static void TransitionToScreen(int screen)
@@ -182,7 +170,7 @@ static void UpdateTransition(void)
                 case LOGO: InitLogoScreen(); break;
                 case TITLE: InitTitleScreen(); break;
                 case GAMEPLAY: InitGameplayScreen(); break;
-                case ENDING: InitEndingScreen(); break;
+                case ENDING: InitEndingScreen(score); break;
                 default: break;
             }
 
@@ -218,7 +206,8 @@ static void UpdateDrawFrame(void)
 {
     // Update
     //----------------------------------------------------------------------------------
-    UpdateMusicStream(music);       // NOTE: Music keeps playing between screens
+    UpdateMusicStream(music1);       // NOTE: Music keeps playing between screens
+    UpdateMusicStream(music2);       // NOTE: Music keeps playing between screens
 
     if (!onTransition)
     {
