@@ -30,7 +30,7 @@ Mouse:
 
 ### Links
 
- - itch.io Release: $(itch.io Game Page)
+ - itch.io Release: https://kurnic.itch.io/super-red-rope-hanging
 
 ### License
 
