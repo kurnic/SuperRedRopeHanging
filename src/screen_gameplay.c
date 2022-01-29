@@ -26,6 +26,8 @@
 #include "raylib.h"
 #include "screens.h"
 
+#define DARKRED   (Color){ 122, 0, 0, 255 }
+
 //----------------------------------------------------------------------------------
 // Module Variables Definition (local)
 //----------------------------------------------------------------------------------
@@ -66,6 +68,8 @@ int limitBetweenWalls = 300;
 int maxWallSpeed = 2;
 int reactionTimeDecrease = 0;
 
+int scoreMultiplier = 1;
+
 //----------------------------------------------------------------------------------
 // Gameplay Screen Functions Definition
 //----------------------------------------------------------------------------------
@@ -99,19 +103,21 @@ void InitGameplayScreen(void)
     floorY = 850;
     ceilingSpeed = 0;
     floorSpeed = 0;
-    ceilingCounter = GetRandomValue(700, 800);
-    floorCounter = GetRandomValue(400, 600);
+    ceilingCounter = GetRandomValue(500, 750);
+    floorCounter = GetRandomValue(250, 500);
     
     wallLeftX = 10;
     wallRightX = 530;
     wallLeftSpeed = 0;
     wallRightSpeed = 0;
-    wallLeftCounter = GetRandomValue(900, 1250);
-    wallRightCounter = GetRandomValue(900, 1250);
+    wallLeftCounter = GetRandomValue(800, 1250);
+    wallRightCounter = GetRandomValue(800, 1250);
     
     limitBetweenWalls = 300;
     maxWallSpeed = 2;
     reactionTimeDecrease = 0;
+    
+    scoreMultiplier = 1;
 }
 
 // Gameplay Screen Update logic
@@ -119,7 +125,6 @@ void UpdateGameplayScreen(void)
 {
     //TODO Screen shake function
     //TODO Add grabbable bonus
-    //TODO That was close counter!
     
     mouseX = GetMouseX();
     mouseY = GetMouseY();
@@ -139,8 +144,8 @@ void UpdateGameplayScreen(void)
     else {
         if (!finished) {
             //Gameplay
-            //Score
-            score += ballPosition.y / 100;
+            //Init
+            scoreMultiplier = 1;
             
             //Controls     
             if(IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
@@ -208,6 +213,41 @@ void UpdateGameplayScreen(void)
             wallLeftX += wallLeftSpeed;
             wallRightX += wallRightSpeed;
             
+            //That was close conditions
+                //A bit close
+            if (ballPosition.y < ceilingY+100) 
+            {
+                scoreMultiplier += 1;
+            }       
+            if (ballPosition.y > floorY-100)
+            {
+                scoreMultiplier += 1;
+            }
+            if (ballPosition.x < wallLeftX+100) {
+                scoreMultiplier += 1;
+            }
+            if (ballPosition.x > wallRightX-100)
+            {
+                scoreMultiplier += 1;
+            }
+            
+                //Very close
+            if (ballPosition.y < ceilingY+50) 
+            {
+                scoreMultiplier += 1;
+            }       
+            if (ballPosition.y > floorY-50)
+            {
+                scoreMultiplier += 1;
+            }
+            if (ballPosition.x < wallLeftX+50) {
+                scoreMultiplier += 1;
+            }
+            if (ballPosition.x > wallRightX-50)
+            {
+                scoreMultiplier += 1;
+            }
+            
             //Death conditions
             if (ballPosition.y < ceilingY+10) 
             {
@@ -244,6 +284,10 @@ void UpdateGameplayScreen(void)
                 finished = true;
                 hooked = false;
             }
+            
+            //Score
+            score += scoreMultiplier * 3;
+            
         }
         else {
             //Small pause time showing tap to end
@@ -274,33 +318,60 @@ void DrawGameplayScreen(void)
         //Ceiling
     DrawRectangle(0, 0, 540, ceilingY, GRAY);
     DrawRectangle(0, ceilingY, 540, 2, BLACK);
+    if (ballPosition.y < ceilingY+100) 
+    {
+        DrawRectangle(0, ceilingY, 540, 2, DARKRED);
+    }
+    if (ballPosition.y < ceilingY+50) 
+    {
+        DrawRectangle(0, ceilingY, 540, 2, RED);
+    }    
     
         //Floor
     DrawRectangle(0, floorY, 540, 900-floorY, GRAY);
     DrawRectangle(0, floorY-2, 540, 2, BLACK);
+    if (ballPosition.y > floorY-100)
+    {
+        DrawRectangle(0, floorY-2, 540, 2, DARKRED);
+    }
+    if (ballPosition.y > floorY-50)
+    {
+        DrawRectangle(0, floorY-2, 540, 2, RED);
+    }
     
     
         //Wall Left
     DrawRectangle(0, ceilingY, wallLeftX, floorY-ceilingY, GRAY);
     DrawRectangle(wallLeftX, ceilingY, 2, floorY-ceilingY, BLACK);
+    if (ballPosition.x < wallLeftX+100) {
+        DrawRectangle(wallLeftX, ceilingY, 2, floorY-ceilingY, DARKRED);
+    }
+    if (ballPosition.x < wallLeftX+50) {
+        DrawRectangle(wallLeftX, ceilingY, 2, floorY-ceilingY, RED);
+    }
     
         //Wall Right
     DrawRectangle(wallRightX, ceilingY, 540-wallRightX, floorY-ceilingY, GRAY);
     DrawRectangle(wallRightX-2, ceilingY, 2, floorY-ceilingY, BLACK);
+    if (ballPosition.x > wallRightX-100)
+    {
+        DrawRectangle(wallRightX-2, ceilingY, 2, floorY-ceilingY, DARKRED);
+    }
+    if (ballPosition.x > wallRightX-50)
+    {
+        DrawRectangle(wallRightX-2, ceilingY, 2, floorY-ceilingY, RED);
+    }
     
-        //Screen borders
+    //Screen borders
     DrawRectangle(0, 0, 540, 2, BLACK);
     DrawRectangle(0, 0, 2, 900, BLACK);
     DrawRectangle(538, 0, 2, 900, BLACK);
     DrawRectangle(0, 898, 540, 2, BLACK);
     
-    //Texts
+    //Score
     if (started) {
         DrawText(TextFormat("Score: %i", score), 20, 10 , 36, BLACK);
-        //DrawText(TextFormat("Limit: %i", limitBetweenWalls), 20, 30 , 36, BLACK);
-        //DrawText(TextFormat("wallLeftX: %i", wallLeftX), 20, 50 , 36, BLACK);
-        //DrawText(TextFormat("wallRightX: %i", wallRightX), 20, 70 , 36, BLACK);
-        //DrawText(TextFormat("Dif: %i", wallRightX - wallLeftX), 20, 90 , 36, BLACK);
+        DrawText(TextFormat("X%i", scoreMultiplier), 470, 10 , 36, (Color){ (scoreMultiplier-1)*63, 0, 0, 255 });
     }
     
     //Red rope
@@ -318,8 +389,8 @@ void DrawGameplayScreen(void)
         DrawText("Press on gray areas to make an elastic rope.", 30, 120, 20, BLACK);
         DrawText("The rope attracts your yellow ball.", 84, 170, 20, BLACK);
         DrawText("Avoid the gray areas with your ball.", 80, 220, 20, BLACK);
-        DrawText("After some time the gray walls will move.", 50, 270, 20, BLACK);
-        DrawText("Stay low to score more points!", 100, 320, 20, BLACK);
+        DrawText("After some time the gray walls will move.", 60, 270, 20, BLACK);
+        DrawText("Stay close to walls for more points!", 80, 320, 20, BLACK);
         DrawText("TAP to START", 200, 865, 20, BLACK);
     }
     
@@ -351,8 +422,10 @@ void DrawGameplayScreen(void)
         
         //Message after 1.5 seconds
         if(finishedCount > 90) {
-            DrawText("PRESS ENTER or TAP to", 140, 855, 20, BLACK);
-            DrawText("JUMP to ENDING SCREEN", 140, 875, 20, BLACK);
+            DrawText("PRESS R TO TRY AGAIN", 150, 470, 20, BLACK);
+            DrawText("OR", 265, 505, 20, BLACK);
+            DrawText("PRESS ENTER or TAP to", 140, 540, 20, BLACK);
+            DrawText("JUMP to ENDING SCREEN", 140, 560, 20, BLACK);
         }
     }
 }

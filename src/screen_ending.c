@@ -121,19 +121,31 @@ void DrawEndingScreen(void)
     DrawText("HANGING", 89, 158, 80, BLACK);
     DrawText("HANGING", 87, 155, 80, RED);
     
-    DrawText("Score", 85, 358, 120, BLACK);
-    DrawText("Score", 85, 362, 120, BLACK);
-    DrawText("Score", 89, 358, 120, BLACK);
-    DrawText("Score", 89, 362, 120, BLACK);
-    DrawText("Score", 87, 360, 120, WHITE);
+    DrawText("Score", 85, 308, 120, BLACK);
+    DrawText("Score", 85, 312, 120, BLACK);
+    DrawText("Score", 89, 308, 120, BLACK);
+    DrawText("Score", 89, 312, 120, BLACK);
+    DrawText("Score", 87, 310, 120, WHITE);
     
-    DrawText(TextFormat("%i", finalScore), 258 - (29 * numPlaces(finalScore)), 478, 120, BLACK);
-    DrawText(TextFormat("%i", finalScore), 258 - (29 * numPlaces(finalScore)), 482, 120, BLACK);
-    DrawText(TextFormat("%i", finalScore), 262 - (29 * numPlaces(finalScore)), 478, 120, BLACK);
-    DrawText(TextFormat("%i", finalScore), 262 - (29 * numPlaces(finalScore)), 482, 120, BLACK);
-    DrawText(TextFormat("%i", finalScore), 260 - (29 * numPlaces(finalScore)), 480, 120, WHITE);
+    DrawText(TextFormat("%i", finalScore), 258 - (29 * numPlaces(finalScore)), 428, 120, BLACK);
+    DrawText(TextFormat("%i", finalScore), 258 - (29 * numPlaces(finalScore)), 432, 120, BLACK);
+    DrawText(TextFormat("%i", finalScore), 262 - (29 * numPlaces(finalScore)), 428, 120, BLACK);
+    DrawText(TextFormat("%i", finalScore), 262 - (29 * numPlaces(finalScore)), 432, 120, BLACK);
+    DrawText(TextFormat("%i", finalScore), 260 - (29 * numPlaces(finalScore)), 430, 120, WHITE);
     
-    DrawText("PRESS ENTER or TAP to RESTART", 85, 750, 20, WHITE);
+    DrawText("#raylib5kgamejam", 34, 608, 55, BLACK);
+    DrawText("#raylib5kgamejam", 34, 612, 55, BLACK);
+    DrawText("#raylib5kgamejam", 38, 608, 55, BLACK);
+    DrawText("#raylib5kgamejam", 38, 612, 55, BLACK);
+    DrawText("#raylib5kgamejam", 36, 610, 55, GOLD);
+    
+    DrawText("THAT WAS CLOSE!", 32, 668, 50, BLACK);
+    DrawText("THAT WAS CLOSE!", 32, 672, 50, BLACK);
+    DrawText("THAT WAS CLOSE!", 36, 668, 50, BLACK);
+    DrawText("THAT WAS CLOSE!", 36, 672, 50, BLACK);
+    DrawText("THAT WAS CLOSE!", 34, 670, 50, WHITE);
+    
+    DrawText("PRESS ENTER or TAP to RESTART", 85, 800, 20, WHITE);
 }
 
 // Ending Screen Unload logic
